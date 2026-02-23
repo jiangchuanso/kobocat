@@ -1,4 +1,4 @@
-FROM python:3.10 as build-python
+FROM python:3.10-bookworm as build-python
 
 ENV VIRTUAL_ENV=/opt/venv \
     KOBOCAT_SRC_DIR=/srv/src/kobocat \
@@ -10,7 +10,7 @@ RUN pip install --quiet pip-tools==7.\*
 COPY ./dependencies/pip/requirements.txt "${TMP_DIR}/pip_dependencies.txt"
 RUN pip-sync "${TMP_DIR}/pip_dependencies.txt" 1>/dev/null
 
-FROM python:3.10-slim
+FROM python:3.10-slim-bookworm
 
 # Declare environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -51,7 +51,6 @@ RUN mkdir -p ${NGINX_STATIC_DIR} && \
 # jnm (or the current on-call sysadmin). Thanks.
 
 RUN apt-get -qq update && \
-    apt-get -qq -y install openjdk-17-jre && \
     apt-get -qq -y install \
         cron \
         gdal-bin \
@@ -63,6 +62,7 @@ RUN apt-get -qq update && \
         libproj-dev \
         libsqlite3-mod-spatialite \
         locales \
+        openjdk-17-jre-headless \
         postgresql-client \
         procps \
         rsync \
